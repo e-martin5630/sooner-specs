@@ -1,4 +1,8 @@
+
+
 import React, { useState } from 'react';
+import { collection, addDoc } from "firebase/firestore";
+import db from "../../../firebase/clientApp";
 import { Container, Form, Row, Col, Card, Button, Stack } from 'react-bootstrap';
 import FormGroup, { FormText, FormSelect, FormNumber, FormImage, FormCheckbox} from './form-cpt.js';
 
@@ -10,15 +14,69 @@ const lensTypeSelections = [
     { key: "trifocal", label: "Trifocal"},
 ];
 
-export default function GlassesInputForm() {
 
+
+export default function GlassesInputForm() {
+    const initialGlassesObject = {
+        frameColor: '',
+        condition: '',
+        lensType: '',
+        rightEye: {
+            sphere: '',
+            cylinder: '',
+            axis: '',
+            add: ''
+        },
+        leftEye: {
+            sphere: '',
+            cylinder: '',
+            axis: '',
+            add: ''
+        }
+    };
+
+    const [glassesForm, setGlassesForm] = useState(initialGlassesObject);
+
+    const handleGlassesForm = async (e) => {
+        e.preventDefault();
+        const target = e.target;
+        const updatedForm = {
+            frameColor: target.frameColor.value,
+            condition: target.condition.value,
+            lensType: glassesForm.lensType,
+            rightEye: {
+                sphere: target.rightSPH.value,
+                cylinder: target.rightCYL.value,
+                axis: target.rightAxis.value,
+                add: target.rightADD.value
+            },
+            leftEye: {
+                sphere: target.leftSPH.value,
+                cylinder: target.leftCYL.value,
+                axis: target.leftAxis.value,
+                add: target.leftADD.value
+            }
+        };
+        setGlassesForm(updatedForm);
+
+        try {
+            const docRef = await addDoc(collection(db, "glasses"), updatedForm);
+            console.log("Document written with ID: ", docRef.id);
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
+    }
+
+    const handleLensTypeChange = (e) => {
+        setGlassesForm({ ...glassesForm, lensType: e.target.id });
+    };
 
     return (
         <Container className="my-4">
             <Card className="mx-auto">
                 <Card.Header as="h4">Glasses Donation Form</Card.Header>
                 <Card.Body>
-                    <Form>
+                    <Form onSubmit={handleGlassesForm} method="POST">
                         <Row className="mb-4 justify-content-between">
                             <Col className="mt-2" md={6} >
                                 <h5>Frame Information</h5>
@@ -28,7 +86,7 @@ export default function GlassesInputForm() {
                             <Col className="mt-2" md={5} >
                                 <h5>Lens Information</h5>
                                 <FormGroup label="Lens Type" controlId="lensType" 
-                                    formItem={<FormCheckbox selectionsWithLabels={lensTypeSelections} name="lensGroup" type="radio" />} 
+                                    formItem={<FormCheckbox selectionsWithLabels={lensTypeSelections} onChange={handleLensTypeChange} name="lensType" type="radio" />} 
                                 />
                             </Col>
                         </Row>
@@ -42,6 +100,8 @@ export default function GlassesInputForm() {
                                             <FormGroup label="Sphere (SPH)" controlId="leftSPH" formItem={<FormNumber />} />
                                             <FormGroup label="Cylinder (CYL)" controlId="leftCYL" formItem={<FormNumber />} />
                                             <FormGroup label="Axis" controlId="leftAxis" formItem={<FormNumber />} />
+                                            <FormGroup label="ADD" controlId="leftADD" formItem={<FormNumber />} />
+
                                         </Stack>
                                     </Stack>
                                 </Card.Body>
@@ -51,11 +111,12 @@ export default function GlassesInputForm() {
                             <Card>
                                 <Card.Body className="d-flex justify-content-start">
                                     <Stack>
-                                        <h6 className="">Right Eye (OS)</h6>
+                                        <h6 className="">Right Eye (OD)</h6>
                                         <Stack direction="horizontal" className="me-auto" gap={3}>
                                             <FormGroup label="Sphere (SPH)" controlId="rightSPH" formItem={<FormNumber />} />
                                             <FormGroup label="Cylinder (CYL)" controlId="rightCYL" formItem={<FormNumber />} />
                                             <FormGroup label="Axis" controlId="rightAxis" formItem={<FormNumber />} />
+                                            <FormGroup label="ADD" controlId="rightADD" formItem={<FormNumber />} />
                                         </Stack>
                                     </Stack>
                                 </Card.Body>

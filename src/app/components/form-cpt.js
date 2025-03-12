@@ -17,11 +17,11 @@ export function FormSelect({ selections }) {
     );
 }
 
-export function FormCheckbox({ selectionsWithLabels, name, type }) {
+export function FormCheckbox({ selectionsWithLabels, name, type, onChange }) {
     return (
         <div key={`default-${type}`} className="mb-3">
-        {selectionsWithLabels.map((selection) => (
-            <Form.Check name={name} type={type} id={`default-${type}`} label={selection.label} />
+        {selectionsWithLabels.map(({key, label}) => (
+            <Form.Check name={name} key={key} onChange={onChange} type={type} id={key} label={label} />
         ))}
         </div>
     );
@@ -29,7 +29,7 @@ export function FormCheckbox({ selectionsWithLabels, name, type }) {
 
 export function FormNumber() {
     return (
-        <Form.Control type="number" />
+        <Form.Control step="0.0001" type="number" />
     );
 }
 
@@ -40,7 +40,7 @@ export function FormImage() {
 }
 
 
-export default function FormGroup({ label, controlId, formItem }) {
+export default function FormGroup({ label, controlId, formItem}) {
     return (
         <Form.Group className="mt-2" controlId={controlId}>
             <Form.Label>{label}</Form.Label>

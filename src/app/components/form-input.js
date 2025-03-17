@@ -2,10 +2,14 @@
 
 import React, { useState } from 'react';
 import { collection, addDoc } from "firebase/firestore";
-import db from "../../../firebase/clientApp";
+import { ref, uploadBytes } from "firebase/storage";
+import db, { storage } from "../../../firebase/clientApp";
 import { Container, Form, Row, Col, Card, Button, Stack } from 'react-bootstrap';
-import FormGroup, { FormText, FormSelect, FormNumber, FormImage, FormCheckbox} from './form-cpt.js';
+import FormGroup, { FormText, FormSelect, FormNumber, FormImage, FormCheckbox } from './form-cpt.js';
 
+const imageStorageRef = ref(storage, 'images/glasses/');
+
+// Form selections and initial state
 const conditionSelections = ["Poor", "Average", "Good", "Excellent"];
 const lensTypeSelections = [ 
     { key: "monofocal", label: "Monofocal"},
@@ -13,34 +17,50 @@ const lensTypeSelections = [
     { key: "progressive", label: "Progressive"},
     { key: "trifocal", label: "Trifocal"},
 ];
-
-
+const initialGlassesObject = {
+    frameColor: '',
+    condition: '',
+    lensType: '',
+    rightEye: {
+        sphere: '',
+        cylinder: '',
+        axis: '',
+        add: ''
+    },
+    leftEye: {
+        sphere: '',
+        cylinder: '',
+        axis: '',
+        add: ''
+    }
+};
 
 export default function GlassesInputForm() {
-    const initialGlassesObject = {
-        frameColor: '',
-        condition: '',
-        lensType: '',
-        rightEye: {
-            sphere: '',
-            cylinder: '',
-            axis: '',
-            add: ''
-        },
-        leftEye: {
-            sphere: '',
-            cylinder: '',
-            axis: '',
-            add: ''
-        }
-    };
-
     const [glassesForm, setGlassesForm] = useState(initialGlassesObject);
 
     const handleGlassesForm = async (e) => {
         e.preventDefault();
         const target = e.target;
+        const glassesUUID = crypto.randomUUID();
+        var hasImage = false;
+        try {
+            if (target.lensImage.files[0].size > 0) {
+                var imageID = glassesUUID + "_image";
+                const imageRef = ref(imageStorageRef, imageID);
+                await uploadBytes(imageRef, target.lensImage.files[0]).then((snapshot) => {
+                    console.log("Image uploaded successfully: ", imageID);
+                    hasImage = true;    
+                });
+            }
+        } 
+        catch (e) {
+            console.error("Error uploading image: ", e);
+        }
+
+
         const updatedForm = {
+            uuid: glassesUUID,
+            hasImage: hasImage,
             frameColor: target.frameColor.value,
             condition: target.condition.value,
             lensType: glassesForm.lensType,
@@ -57,10 +77,12 @@ export default function GlassesInputForm() {
                 add: target.leftADD.value
             }
         };
+        console.log(updatedForm);
         setGlassesForm(updatedForm);
 
         try {
             const docRef = await addDoc(collection(db, "glasses"), updatedForm);
+            
             console.log("Document written with ID: ", docRef.id);
         } catch (e) {
             console.error("Error adding document: ", e);
@@ -88,6 +110,7 @@ export default function GlassesInputForm() {
                                 <FormGroup label="Lens Type" controlId="lensType" 
                                     formItem={<FormCheckbox selectionsWithLabels={lensTypeSelections} onChange={handleLensTypeChange} name="lensType" type="radio" />} 
                                 />
+                                <FormGroup label="Upload Image (Optional)" controlId="lensImage" formItem={<FormImage />} />
                             </Col>
                         </Row>
                         <h5>Prescription Details</h5>      

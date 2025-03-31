@@ -4,7 +4,7 @@ const nextConfig = {
     images: {
         unoptimized: true,
     },
-    basePath: "https://e-martin5630.github.io/sooner-specs/"
+    basePath: "/sooner-specs/"
 };
 
 

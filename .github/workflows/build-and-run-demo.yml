@@ -85,6 +85,14 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      NEXT_PUBLIC_FB_API_KEY: ${{ secrets.FB_API_KEY }}
+      NEXT_PUBLIC_FB_AUTH_DOMAIN: ${{ secrets.FB_AUTH_DOMAIN }}
+      NEXT_PUBLIC_FB_PROJECT_ID: ${{ secrets.FB_PROJECT_ID }}
+      NEXT_PUBLIC_FB_STORAGE_BUCKET: ${{ secrets.FB_STORAGE_BUCKET }}
+      NEXT_PUBLIC_FB_MESSAGING_SENDER_ID: ${{ secrets.FB_MESSAGING_SENDER_ID }}
+      NEXT_PUBLIC_FB_APP_ID: ${{ secrets.FB_APP_ID }}
+      NEXT_PUBLIC_FB_MEASUREMENT_ID: ${{ secrets.FB_MEASUREMENT_ID }}
     runs-on: ubuntu-latest
     needs: build
     steps:

@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+/firebase/fbDevConfig.js
 
 # debug
 npm-debug.log*

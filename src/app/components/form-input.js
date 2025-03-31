@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { collection, addDoc } from "firebase/firestore";
 import { ref, uploadBytes } from "firebase/storage";
-import db, { storage } from "../../../firebase/clientApp";
+import db, { storage } from "../../../firebase/firebaseDB";
 import { Container, Form, Row, Col, Card, Button, Stack } from 'react-bootstrap';
 import FormGroup, { FormText, FormSelect, FormNumber, FormImage, FormCheckbox } from './form-cpt.js';
 

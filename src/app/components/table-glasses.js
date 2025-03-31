@@ -1,6 +1,6 @@
 import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
-import db, { storage } from '../../../firebase/clientApp';
+import db, { storage } from '../../../firebase/firebaseDB';
 import { collection, getDocs } from 'firebase/firestore';
 import { ref, getDownloadURL } from 'firebase/storage';
 import Image from 'next/image';

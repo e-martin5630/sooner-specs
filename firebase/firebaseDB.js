@@ -4,13 +4,13 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDcoJ_Q_HSe1NJCJ2pDMrrtV_vOAzlbwyw",
-  authDomain: "sooner-specs.firebaseapp.com",
-  projectId: "sooner-specs",
-  storageBucket: "sooner-specs.firebasestorage.app",
-  messagingSenderId: "462442108583",
-  appId: "1:462442108583:web:5ce8efc95de90274442d82",
-  measurementId: "G-D6QKWNWCQ8"
+  apiKey: FB_API_KEY,
+  authDomain: FB_AUTH_DOMAIN,
+  projectId: FB_PROJECT_ID,
+  storageBucket: FB_STORAGE_BUCKET,
+  messagingSenderId: FB_MESSAGING_SENDER_ID,
+  appId: FB_APP_ID,
+  measurementId: FB_MEASUREMENT_ID,
 };
 
 // Initialize Firebase

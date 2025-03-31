@@ -8,7 +8,7 @@ import GlassesTable from './components/table-glasses.js';
 
 
 // import styles from "./page.module.css";
-import db from "../../firebase/clientApp.js";
+import db from "../../firebase/firebaseDB.js";
 import { collection, getDocs } from "firebase/firestore";
 
 
@@ -25,6 +25,7 @@ export default function Home() {
           {page === "browse" && <GlassesTable />}
           {page === "donate" && <GlassesInputForm />}
           {page === "home"}
+          {process.env.NEXT_PUBLIC_FIREBASE_API_KEY}
         </div>
       </div>
     </div>
